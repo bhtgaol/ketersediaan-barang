@@ -17,7 +17,25 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
-	mux.Get("/signup", controllers.Repo.Signup)
+	// route for user
+	mux.Post("/registter", controllers.RepoUser.Register)
+	mux.Get("/login", controllers.RepoUser.Login)
+	mux.Get("/users", controllers.RepoUser.GetUser)
+
+	// route for store
+	mux.Post("/stores", controllers.RepoStore.SetStore)
+	mux.Get("/stores", controllers.RepoStore.GetStore)
+	mux.Get("/stores/id", controllers.RepoStore.GetOneStore)
+
+	// route for status
+	mux.Post("/status", controllers.RepoStatus.SetStatus)
+	mux.Get("/status", controllers.RepoStatus.GetStatus)
+	mux.Get("/status/id", controllers.RepoStatus.GetOneStatus)
+
+	// route for goods
+	mux.Post("/goods", controllers.RepoGoods.SetGoods)
+	mux.Get("/goods", controllers.RepoGoods.GetGoods)
+	mux.Get("/goods/id", controllers.RepoGoods.GetOneGoods)
 
 	return mux
 }

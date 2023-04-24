@@ -34,8 +34,17 @@ func AppStart() {
 	app.Session = session
 	app.UseCache = false
 
-	repo := controllers.NewUserRepo(&app)
-	controllers.NewUserController(repo)
+	repouser := controllers.NewUserRepo(&app)
+	controllers.NewUserController(repouser)
+
+	repostore := controllers.NewUserRepo(&app)
+	controllers.NewUserController(repostore)
+
+	repostatus := controllers.NewUserRepo(&app)
+	controllers.NewUserController(repostatus)
+
+	repogoods := controllers.NewUserRepo(&app)
+	controllers.NewUserController(repogoods)
 
 	srv := &http.Server{
 		Addr:    os.Getenv("PORT_NUMBER"),
