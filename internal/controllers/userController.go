@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -31,42 +32,50 @@ func NewUserController(r *RepositoryUser) {
 
 // Register is function use to register user
 func (m *RepositoryUser) Register(w http.ResponseWriter, r *http.Request) {
-	resp := models.User{
-		Name:         "Boy",
-		PhoneNumber:  "08123123123",
-		EmailAddress: "boy@gmail.com",
-		Password:     "test",
-	}
+	var user models.User
 
-	out, err := json.MarshalIndent(resp, "", "     ")
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(out)
+	//w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, "Hello World!")
 }
 
 // Login is function to login user
 func (m *RepositoryUser) Login(w http.ResponseWriter, r *http.Request) {
-	resp := models.User{
+	var user models.User
+	staticUser := models.User{
 		Name:         "Boy",
 		PhoneNumber:  "08123123123",
 		EmailAddress: "boy@gmail.com",
 		Password:     "test",
 	}
 
-	out, err := json.MarshalIndent(resp, "", "     ")
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(out)
+	// checking email
+	if staticUser.EmailAddress != user.EmailAddress {
+		http.Error(w, "Email yang anda masukkan tidak ditemmukan", http.StatusBadRequest)
+		return
+	}
+
+	// checking password
+	if staticUser.Password != user.Password {
+		http.Error(w, "Password yang anda masukkan salah", http.StatusBadRequest)
+		return
+	}
 }
 
 // GetUser is function to Get all user
 func (m *RepositoryUser) GetUser(w http.ResponseWriter, r *http.Request) {
+	var respslice []models.User
 	resp := models.User{
 		Name:         "Boy",
 		PhoneNumber:  "08123123123",
@@ -74,7 +83,11 @@ func (m *RepositoryUser) GetUser(w http.ResponseWriter, r *http.Request) {
 		Password:     "test",
 	}
 
-	out, err := json.MarshalIndent(resp, "", "     ")
+	respslice = append(respslice, resp)
+	respslice = append(respslice, resp)
+	respslice = append(respslice, resp)
+
+	out, err := json.MarshalIndent(respslice, "", "    ")
 	if err != nil {
 		log.Println(err)
 	}

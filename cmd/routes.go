@@ -18,7 +18,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(SessionLoad)
 
 	// route for user
-	mux.Post("/registter", controllers.RepoUser.Register)
+	mux.Post("/register", controllers.RepoUser.Register)
 	mux.Get("/login", controllers.RepoUser.Login)
 	mux.Get("/users", controllers.RepoUser.GetUser)
 
